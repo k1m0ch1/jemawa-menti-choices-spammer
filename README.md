@@ -1,8 +1,8 @@
 ```
-    _  _   _  __  __    _   __      __   _
- _ | || | | ||  \/  |  /_\  \ \    / /  /_\
-| || || |_| || |\/| | / _ \  \ \/\/ /  / _ \
- \__/  \___/ |_|  |_|/_/ \_\  \_/\_/  /_/ \_\
+    _  ___  __  __    _   __      __   _
+ _ | || __||  \/  |  /_\  \ \    / /  /_\
+| || || _| | |\/| | / _ \  \ \/\/ /  / _ \
+ \__/ |___||_|  |_|/_/ \_\  \_/\_/  /_/ \_\
 
 Mentimeter Multiple Choice Spammer
 ```
@@ -20,7 +20,7 @@ pip3 install -r requirements.txt
 
 and to run just simply
 ```
-python3 dor.py <vote page link>
+python3 dor.py <mentimeter vote page link>
 ```
 ex: 
 ```

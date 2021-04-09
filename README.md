@@ -12,6 +12,10 @@ I know this is stupid but its fun, my company using this to vote "something" for
 and yeah
 > DISCLAIMER or USE AT YOUR OWN RISK, These tools should be considered for educational and research purposes only, this tools is made not to violate the law or abuse the system. Any action you take by using this tools is strictly at your own risk. The creator is not responsible for any action 
 
+Click the video to see how it work.
+
+[![Jemawa](https://img.youtube.com/vi/sVb0bos-vkQ/0.jpg)](https://www.youtube.com/watch?v=sVb0bos-vkQ "JEMAWA the mentimeter multiple choice vote spammer")
+
 ## How to use ?
 
 ```

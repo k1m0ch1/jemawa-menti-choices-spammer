@@ -19,6 +19,9 @@ if len(sys.argv) < 2:
 TARGET = sys.argv[1]
 KEY = TARGET.split('/',)[3]
 DATA_PAGE = f"https://www.menti.com/core/vote-keys/{KEY}/series"
+SUPPORTED_TYPE = ['choices', 'ranking']
+if sys.argv[2] != "":
+    CUSTOM = sys.argv[2]
 
 
 firstPage = requests.get(DATA_PAGE, headers={
@@ -33,13 +36,21 @@ if firstPage.status_code != 200:
 
 INIT = firstPage.json()
 PRESENTER_ID = INIT['pace']['active']
+if sys.argv[2] == "questions":
+    for question in INIT['questions']:
+        print(f"[{question['id']}] type: {question['type']} question: {question['question']}")
+    sys.exit(1)
+    
+if sys.argv[2] != "":
+    PRESENTER_ID = CUSTOM
+
 PRESENTER_QUESTION = INIT['questions'][0] # default
 for question in INIT['questions']:
     if PRESENTER_ID == question['id']:
-        # if question['type'] not in ['choices', 'ranking']:
-        #     print(f"WTF this is {question['type']}, didn't I tell you this is only for MULTIPLE CHOICE? (＃`Д´)")
-        #     print("just wait until the presenter show the multiple choices to vote")
-        #     sys.exit(1)
+        if question['type'] not in SUPPORTED_TYPE:
+            print(f"WTF this is {question['type']}, didn't I tell you this is only for {SUPPORTED_TYPE}? (＃`Д´)")
+            print(f"just wait until the presenter show the {SUPPORTED_TYPE} to vote")
+            sys.exit(1)
         PRESENTER_QUESTION = question
         break
 
@@ -48,7 +59,12 @@ pqi = { f"{item['id']}": item['label'] for item in PRESENTER_QUESTION['choices']
 CURRENT_ID = INIT['pace']['active']
 QUESTIONS = {question['id']: question for question in INIT['questions']}
 
-print(f"Current Presenter Page {QUESTIONS[PRESENTER_ID]['type']} {PRESENTER_ID} {PRESENTER_QUESTION['question']}\n")
+if sys.argv[2] != "":
+    print(f"\nCurrent Presenter Page {QUESTIONS[CUSTOM]['type']} {CUSTOM} {PRESENTER_QUESTION['question']}\n")
+elif sys.argv[2] == "questions":
+    print(f"\nyou choose custom page Page {QUESTIONS[CUSTOM]['type']} {CUSTOM} {PRESENTER_QUESTION['question']}\n")
+else:
+    print(f"\nCurrent Presenter Page {QUESTIONS[PRESENTER_ID]['type']} {PRESENTER_ID} {PRESENTER_QUESTION['question']}\n")
 
 for choice in PRESENTER_QUESTION['choices']:
     print(f"ID {choice['id']} LABEL {choice['label']}")
@@ -80,6 +96,9 @@ for until in range(0, int(loop)):
 
     headers['x-identifier'] = getIdentifier.json()['identifier']
     
+    if sys.argv[2] != "":
+        PRESENTER_ID = CUSTOM
+
     DATA = {
         'question_type': QUESTIONS[PRESENTER_ID]['type'],
         'vote': choice

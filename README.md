@@ -31,6 +31,25 @@ ex:
 python3 dor.py https://www.menti.com/lolrandom7
 ```
 
+## Ranking Support
+
+Now you can vote on ranking type
+
+## Custom page vote
+
+Now you can vote on any page not by only presented page, to do this you can run this
+
+```
+python3 dor.py <link> questions
+```
+to list the questions, after that get the question ID and run this
+
+```
+python3 dor.py <link> <questionID>
+```
+
+so it will continue like normal
+
 ## How this is work?
 
 alright so you want to know, actually you can spam vote by creating a new session or a new identifier to every vote, you know its like whenver you want to vote, just simply open a new private browser, and vote.

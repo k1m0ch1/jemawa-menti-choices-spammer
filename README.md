@@ -35,6 +35,28 @@ python3 dor.py https://www.menti.com/lolrandom7
 
 Now you can vote on ranking type
 
+![](img/ranking-poc.png)
+
+## Wordcloud and Open Support
+
+now you can add wordcloud with spam vote, and also with open text
+
+![](img/open-poc.png)
+
+![](img/wordcloud-poc.png)
+
+## Scales support
+
+now you can spam the scales vote
+
+![](img/scales-poc.png)
+
+## QFA question vote
+
+now you can spam one of the question so it will have a bigger upvote
+
+![](img/qfa-poc.png)
+
 ## Custom page vote
 
 Now you can vote on any page not by only presented page, to do this you can run this

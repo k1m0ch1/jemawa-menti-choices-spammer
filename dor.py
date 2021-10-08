@@ -16,18 +16,21 @@ if len(sys.argv) < 2:
     print(f"\n( `ε´ ) you need to provide the menti page, ex: https://www.menti.com/uyupv3tww7")
     sys.exit(1)
 
+IS_CUSTOM_VOTE = len(sys.argv) == 3
 TARGET = sys.argv[1]
 KEY = TARGET.split('/',)[3]
 DATA_PAGE = f"https://www.menti.com/core/vote-keys/{KEY}/series"
-SUPPORTED_TYPE = ['choices', 'ranking']
-if sys.argv[2] != "":
+SUPPORTED_TYPE = ['choices', 'ranking', 'wordcloud', 'open', 'scales', 'qfa']
+HEADERS = {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
+}
+
+if IS_CUSTOM_VOTE:
     CUSTOM = sys.argv[2]
 
 
-firstPage = requests.get(DATA_PAGE, headers={
-    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
-})
+firstPage = requests.get(DATA_PAGE, headers=HEADERS)
 
 if firstPage.status_code != 200:
     print(f"{firstPage.status_code} WTF I can't access the page (＃`Д´)")
@@ -36,12 +39,13 @@ if firstPage.status_code != 200:
 
 INIT = firstPage.json()
 PRESENTER_ID = INIT['pace']['active']
-if sys.argv[2] == "questions":
-    for question in INIT['questions']:
-        print(f"[{question['id']}] type: {question['type']} question: {question['question']}")
-    sys.exit(1)
+if IS_CUSTOM_VOTE:
+    if sys.argv[2] == "questions":
+        for question in INIT['questions']:
+            print(f"[{question['id']}] type: {question['type']} question: {question['question']}")
+        sys.exit(1)
     
-if sys.argv[2] != "":
+if IS_CUSTOM_VOTE:
     PRESENTER_ID = CUSTOM
 
 PRESENTER_QUESTION = INIT['questions'][0] # default
@@ -59,18 +63,55 @@ pqi = { f"{item['id']}": item['label'] for item in PRESENTER_QUESTION['choices']
 CURRENT_ID = INIT['pace']['active']
 QUESTIONS = {question['id']: question for question in INIT['questions']}
 
-if sys.argv[2] != "":
-    print(f"\nCurrent Presenter Page {QUESTIONS[CUSTOM]['type']} {CUSTOM} {PRESENTER_QUESTION['question']}\n")
-elif sys.argv[2] == "questions":
-    print(f"\nyou choose custom page Page {QUESTIONS[CUSTOM]['type']} {CUSTOM} {PRESENTER_QUESTION['question']}\n")
+if IS_CUSTOM_VOTE:
+    if sys.argv[2] == "questions":
+        print(f"\nCurrent Presenter Page {QUESTIONS[CUSTOM]['type']} {CUSTOM} {PRESENTER_QUESTION['question']}\n")
 else:
     print(f"\nCurrent Presenter Page {QUESTIONS[PRESENTER_ID]['type']} {PRESENTER_ID} {PRESENTER_QUESTION['question']}\n")
 
-for choice in PRESENTER_QUESTION['choices']:
-    print(f"ID {choice['id']} LABEL {choice['label']}")
-choice = input(f"\nWhich ID you want to vote: ")
+if QUESTIONS[PRESENTER_ID]['type'] == "qfa":
+    page = 0
+    parseQA = []
+    while True:
+        page += 1
+        getQA = requests.get(f"https://www.menti.com/core/vote-keys/{KEY}/qfa?page={page}", headers=HEADERS)
+        dataQA = getQA.json()
+        parseQA += [item for item in dataQA['data']]
+        if len(dataQA['data']) == 0:
+            break
+    for q in parseQA:
+        print(f"ID {q['id']} {q['question']}")
+else:
+    for choice in PRESENTER_QUESTION['choices']:
+        print(f"ID {choice['id']} LABEL {choice['label']}")
+    
+
+value = ""
+if QUESTIONS[PRESENTER_ID]['type'] in ['wordcloud', 'open']:
+    choice = input(f"\nWhat text you want to sent: ")
+elif QUESTIONS[PRESENTER_ID]['type'] == "scales":
+    choice = input(f"\nWhich ID you want to vote: ")
+    while True:
+        value = input(f"\nInsert the value from 1-5: ")
+        value = int(value)
+        if value<0 or value >5:
+            print("WTF? re-input mf")
+        else:
+            reValue = [value,1]
+            value = {
+                f"{choice}": value
+            }
+            break
+else:
+    choice = input(f"\nWhich ID you want to vote: ")
+
 loop = input("how much vote you want to sent: ")
-print(f"\nyou pick '{pqi[choice]}' to vote '{loop}' times\n")
+if QUESTIONS[PRESENTER_ID]['type'] in ['wordcloud', 'open']:
+    print(f"\nyou pick '{choice}' to vote '{loop}' times\n")
+elif QUESTIONS[PRESENTER_ID]['type'] == "qfa":
+    print(f"\nyou pick '{choice}' to vote '{loop}' times\n")
+else:
+    print(f"\nyou pick '{pqi[choice]}' to vote '{loop}' times\n")
 sure = input("you sure about this? (Y/N) ").lower()
 if sure == 'n':
     print("bye")
@@ -96,20 +137,26 @@ for until in range(0, int(loop)):
 
     headers['x-identifier'] = getIdentifier.json()['identifier']
     
-    if sys.argv[2] != "":
+    if IS_CUSTOM_VOTE:
         PRESENTER_ID = CUSTOM
 
     DATA = {
         'question_type': QUESTIONS[PRESENTER_ID]['type'],
         'vote': choice
-    }    
+    } 
 
     if QUESTIONS[PRESENTER_ID]['type'] == "ranking":
         DATA['vote'] = [int(choice)]
 
-    vote = requests.post(f"https://www.menti.com/core/votes/{PRESENTER_ID}", headers=headers, json=DATA)
+    if QUESTIONS[PRESENTER_ID]['type'] == "scales":
+        DATA['vote'] = value
 
-    if vote.status_code != 200:
+    if QUESTIONS[PRESENTER_ID]['type'] == "qfa":
+        vote = requests.post(f"https://www.menti.com/core/qfa/{choice}/upvote", headers=headers, json={})
+    else:
+        vote = requests.post(f"https://www.menti.com/core/votes/{PRESENTER_ID}", headers=headers, json=DATA)
+
+    if vote.status_code not in [201, 200]:
         print(f"{vote.status_code} HAHAHAHAHA LOOKS LIKE ERROR, LOOKS WHAT YOU DID ┐('～`;)┌")
         print(vote.text)
         break

@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup as bs
 from progress.bar import Bar
 from art import text2art, art
 from progress.spinner import Spinner
+import itertools
+import numpy as np
 
 print(text2art("JEMAWA", font='small'))
 print(f"Mentimeter Multiple choice spammer {art('random')}")
@@ -20,7 +22,7 @@ IS_CUSTOM_VOTE = len(sys.argv) == 3
 TARGET = sys.argv[1]
 KEY = TARGET.split('/',)[3]
 DATA_PAGE = f"https://www.menti.com/core/vote-keys/{KEY}/series"
-SUPPORTED_TYPE = ['choices', 'ranking', 'wordcloud', 'open', 'scales', 'qfa']
+SUPPORTED_TYPE = ['choices', 'ranking', 'wordcloud', 'open', 'scales', 'qfa', 'prioritisation']
 HEADERS = {
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
@@ -102,6 +104,32 @@ elif QUESTIONS[PRESENTER_ID]['type'] == "scales":
                 f"{choice}": value
             }
             break
+elif QUESTIONS[PRESENTER_ID]['type'] == "prioritisation":
+    selected_choice = input("\nWhich id do you want to prioritize:")
+    value = {
+        selected_choice: int(50)
+    }
+    num_list = []
+
+    numbers = [10, 10, 10, 20, 30, 40]
+    result = [seq for i in range(len(numbers), 0, -1) for seq in itertools.combinations(numbers, i) if sum(seq) == 50]
+    
+    for res in result:
+        if len(res) == (len(PRESENTER_QUESTION['choices']) - 1 ):
+            num_list = np.asarray(res)
+            break
+    
+    choice_list = []
+    for choice_var in PRESENTER_QUESTION['choices']:
+        if choice_var['id'] == int(selected_choice): 
+            continue
+        print(f"id {choice_var['id']}")
+        key = f"{choice_var['id']}"
+        choice_list.append(key)
+
+    for i in range(len(choice_list)):
+        value[choice_list[i]] = int(num_list[i])
+        
 else:
     choice = input(f"\nWhich ID you want to vote: ")
 
@@ -110,6 +138,8 @@ if QUESTIONS[PRESENTER_ID]['type'] in ['wordcloud', 'open']:
     print(f"\nyou pick '{choice}' to vote '{loop}' times\n")
 elif QUESTIONS[PRESENTER_ID]['type'] == "qfa":
     print(f"\nyou pick '{choice}' to vote '{loop}' times\n")
+elif QUESTIONS[PRESENTER_ID]['type'] == "prioritisation":
+    print(f"\nyou pick '{selected_choice}' to vote '{loop}' times\n")
 else:
     print(f"\nyou pick '{pqi[choice]}' to vote '{loop}' times\n")
 sure = input("you sure about this? (Y/N) ").lower()
@@ -148,7 +178,7 @@ for until in range(0, int(loop)):
     if QUESTIONS[PRESENTER_ID]['type'] == "ranking":
         DATA['vote'] = [int(choice)]
 
-    if QUESTIONS[PRESENTER_ID]['type'] == "scales":
+    if QUESTIONS[PRESENTER_ID]['type'] in ["scales", "prioritisation"] :
         DATA['vote'] = value
 
     if QUESTIONS[PRESENTER_ID]['type'] == "qfa":

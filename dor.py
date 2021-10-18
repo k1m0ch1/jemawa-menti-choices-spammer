@@ -20,7 +20,7 @@ IS_CUSTOM_VOTE = len(sys.argv) == 3
 TARGET = sys.argv[1]
 KEY = TARGET.split('/',)[3]
 DATA_PAGE = f"https://www.menti.com/core/vote-keys/{KEY}/series"
-SUPPORTED_TYPE = ['choices', 'ranking', 'wordcloud', 'open', 'scales', 'qfa']
+SUPPORTED_TYPE = ['choices', 'ranking', 'wordcloud', 'open', 'scales', 'qfa', 'rating']
 HEADERS = {
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
@@ -102,6 +102,21 @@ elif QUESTIONS[PRESENTER_ID]['type'] == "scales":
                 f"{choice}": value
             }
             break
+elif QUESTIONS[PRESENTER_ID]['type'] == "rating":
+    choice = input(f"\nWhich ID you want to vote: ")
+    while True:
+        valueHorizontal = input(f"\nInsert horizontal axis value from 1-10: ")
+        valueHorizontal = int(valueHorizontal)
+        if valueHorizontal<0 or valueHorizontal >10:
+            print("WTF? re-input mf")
+        else:
+            valueVertical = input(f"\nInsert vertical axis value from 1-10: ")
+            valueVertical = int(valueVertical)
+            if valueVertical<0 or valueVertical >10:
+                print("WTF? re-input mf")
+            else:
+                value = [valueHorizontal, valueVertical]
+                break
 else:
     choice = input(f"\nWhich ID you want to vote: ")
 
@@ -150,6 +165,11 @@ for until in range(0, int(loop)):
 
     if QUESTIONS[PRESENTER_ID]['type'] == "scales":
         DATA['vote'] = value
+
+    if QUESTIONS[PRESENTER_ID]['type'] == "rating":
+        values={c['id']: [0,0] for c in PRESENTER_QUESTION['choices']}
+        values[int(choice)] = value
+        DATA['vote'] = values
 
     if QUESTIONS[PRESENTER_ID]['type'] == "qfa":
         vote = requests.post(f"https://www.menti.com/core/qfa/{choice}/upvote", headers=headers, json={})

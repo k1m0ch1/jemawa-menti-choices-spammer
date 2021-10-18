@@ -7,8 +7,6 @@ from bs4 import BeautifulSoup as bs
 from progress.bar import Bar
 from art import text2art, art
 from progress.spinner import Spinner
-import itertools
-import numpy as np
 
 print(text2art("JEMAWA", font='small'))
 print(f"Mentimeter Multiple choice spammer {art('random')}")
@@ -106,29 +104,8 @@ elif QUESTIONS[PRESENTER_ID]['type'] == "scales":
             break
 elif QUESTIONS[PRESENTER_ID]['type'] == "prioritisation":
     selected_choice = input("\nWhich id do you want to prioritize:")
-    value = {
-        selected_choice: int(50)
-    }
-    num_list = []
-
-    numbers = [10, 10, 10, 20, 30, 40]
-    result = [seq for i in range(len(numbers), 0, -1) for seq in itertools.combinations(numbers, i) if sum(seq) == 50]
-    
-    for res in result:
-        if len(res) == (len(PRESENTER_QUESTION['choices']) - 1 ):
-            num_list = np.asarray(res)
-            break
-    
-    choice_list = []
-    for choice_var in PRESENTER_QUESTION['choices']:
-        if choice_var['id'] == int(selected_choice): 
-            continue
-        print(f"id {choice_var['id']}")
-        key = f"{choice_var['id']}"
-        choice_list.append(key)
-
-    for i in range(len(choice_list)):
-        value[choice_list[i]] = int(num_list[i])
+    value = { choice['id']: 0 for choice in PRESENTER_QUESTION['choices'] }
+    value[selected_choice] = 100
         
 else:
     choice = input(f"\nWhich ID you want to vote: ")

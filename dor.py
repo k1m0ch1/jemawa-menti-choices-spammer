@@ -110,7 +110,7 @@ elif QUESTIONS[PRESENTER_ID]['type'] == "rating":
         if valueHorizontal<0 or valueHorizontal >10:
             print("WTF? re-input mf")
         else:
-            valueVertical = input(f"\nInsert vertical axis value from 1-10: ")
+            valueVertical = input(f"Insert vertical axis value from 1-10: ")
             valueVertical = int(valueVertical)
             if valueVertical<0 or valueVertical >10:
                 print("WTF? re-input mf")

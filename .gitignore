@@ -1,3 +1,4 @@
 *.pyc
 Pipfile.lock
 .payload/
+*.DS_Store

@@ -67,6 +67,12 @@ now you can spam one of the question so it will have a bigger upvote
 
 ![](img/point-poc.png)
 
+## 2x2 grid vote
+
+Now you can spam 2x2 grid vote
+
+![](img/2x2-grid-poc.png)
+
 ## Custom page vote
 
 Now you can vote on any page not by only presented page, to do this you can run this

@@ -105,3 +105,7 @@ so this is how program work.
 ## What is jemawa ?
 
 indonesian word for 'arrogant'
+
+## Contributors
+
+![GitHub Contributors Image](https://contrib.rocks/image?repo=k1m0ch1/jemawa-menti-choices-spammer)

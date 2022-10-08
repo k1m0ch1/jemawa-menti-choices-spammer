@@ -2,3 +2,5 @@
 Pipfile.lock
 .payload/
 *.DS_Store
+*egg-info
+dist/

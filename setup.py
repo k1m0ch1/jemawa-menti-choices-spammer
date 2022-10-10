@@ -19,5 +19,10 @@ setup(
     [console_scripts]
     jemawa=jemawa.cli:main
     ''',
-    install_requires=['requests'],
+    install_requires=[
+        'art==5.1', 
+        'beautifulsoup4==4.9.3',
+        'certifi==2020.12.5',
+        'progress==1.5',
+        'requests==2.25.1'],
 )

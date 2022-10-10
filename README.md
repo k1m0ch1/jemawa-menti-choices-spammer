@@ -19,22 +19,17 @@ Click the video to see how it work.
 
 ## How to use ?
 
+we publish on pypi, you could run jemawa by install with this command 
 ```
-pip3 install -r requirements.txt
-```
-
-and to run just simply
-
-```
-python3 dor.py <mentimeter vote page link>
+pip install jemawa
 ```
 
-ex:
+after that you can run `jemawa` command
 
 ```
-python3 dor.py https://www.menti.com/lolrandom7
+jemawa <mentimeter vote page link>
 ```
-
+# Vote Type Support 
 ## Ranking Support
 
 Now you can vote on ranking type

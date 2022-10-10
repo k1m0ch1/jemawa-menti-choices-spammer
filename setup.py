@@ -8,7 +8,7 @@ setup(
     name="jemawa",
     url="https://github.com/k1m0ch1/jemawa-menti-choices-spammer",
     author="k1m0ch1",
-    version='1.0.3',
+    version='1.0.4',
     description="Python CLI tool that spam the mentimeter live vote",
     packages=find_packages(),
     keywords='mentimeter menti spammer k1m0ch1',

@@ -1,6 +1,8 @@
 import re
 import sys
 import json
+import threading
+import math
 
 import requests
 from bs4 import BeautifulSoup as bs
@@ -21,12 +23,13 @@ def main():
     TARGET = sys.argv[1]
     KEY = TARGET.split('/',)[3]
     DATA_PAGE = f"https://www.menti.com/core/vote-keys/{KEY}/series"
-    SUPPORTED_TYPE = ['choices', 'ranking', 'wordcloud', 'open', 'scales', 'qfa', 'prioritisation', 'rating']
+    SUPPORTED_TYPE = ['choices', 'ranking', 'wordcloud', 'open', 'scales', 'qfa', 'prioritisation', 'rating', 'slide']
     HEADERS = {
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
     }
 
+    CUSTOM= ""
     if IS_CUSTOM_VOTE:
         CUSTOM = sys.argv[2]
 
@@ -79,7 +82,7 @@ def main():
         for q in parseQA:
             print(f"ID {q['id']} {q['question']}")
     
-    if QUESTIONS[PRESENTER_ID]['type'] == "choices":
+    if QUESTIONS[PRESENTER_ID]['type'] in ["choices", "ranking"]:
         for choice in PRESENTER_QUESTION['choices']:
             print(f"ID {choice['id']} LABEL {choice['label']}")
         
@@ -119,6 +122,9 @@ def main():
         selected_choice = input("\nWhich id do you want to prioritize:")
         value = { choice['id']: 0 for choice in PRESENTER_QUESTION['choices'] }
         value[selected_choice] = 100
+
+    elif QUESTIONS[PRESENTER_ID]['type'] == "slide":
+        choice = 'heart1'
             
     else:
         choice = input(f"\nWhich ID you want to vote: ")
@@ -130,6 +136,8 @@ def main():
         print(f"\nyou pick '{choice}' to vote '{loop}' times\n")
     elif QUESTIONS[PRESENTER_ID]['type'] == "prioritisation":
         print(f"\nyou pick '{selected_choice}' to vote '{loop}' times\n")
+    elif QUESTIONS[PRESENTER_ID]['type'] == "slide":
+        print(f"\nyou pick '{loop}' times\n")
     else:
         print(f"\nyou pick '{pqi[choice]}' to vote '{loop}' times\n")
     sure = input("you sure about this? (Y/N) ").lower()
@@ -137,6 +145,21 @@ def main():
         print("bye")
         sys.exit(0)
 
+    threads = []
+
+    loopround = 4 if int(loop)%2 == 0 else 5
+    loop = int(math.ceil(int(loop)/loopround))
+
+    for i in range(0, loopround):
+        t = threading.Thread(target=execute, args=(TARGET, IS_CUSTOM_VOTE, QUESTIONS, CUSTOM, choice, PRESENTER_QUESTION,value , loop, PRESENTER_ID))
+        t.start()
+        threads.append(t)
+
+    for thread in threads:
+        thread.join()
+
+def execute(TARGET, IS_CUSTOM_VOTE, QUESTIONS, CUSTOM, choice, PRESENTER_QUESTION, value , loop, PRESENTER_ID):
+    
     bar = Bar('w00t w00t', max=int(loop))
     for until in range(0, int(loop)):
 
@@ -170,6 +193,9 @@ def main():
 
         if QUESTIONS[PRESENTER_ID]['type'] in ["scales", "prioritisation"] :
             DATA['vote'] = value
+
+        if QUESTIONS[PRESENTER_ID]['type'] == "slide":
+            DATA['vote'] = choice
 
         if QUESTIONS[PRESENTER_ID]['type'] == "rating":
             values={c['id']: [0,0] for c in PRESENTER_QUESTION['choices']}

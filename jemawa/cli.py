@@ -85,6 +85,9 @@ def main():
     if QUESTIONS[PRESENTER_ID]['type'] in ["choices", "ranking"]:
         for choice in PRESENTER_QUESTION['choices']:
             print(f"ID {choice['id']} LABEL {choice['label']}")
+
+    if QUESTIONS[PRESENTER_ID]['type'] == "slide":
+        print("LETS SPAM HEART <3")
         
     value = ""
     if QUESTIONS[PRESENTER_ID]['type'] in ['wordcloud', 'open']:

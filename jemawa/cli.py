@@ -21,13 +21,23 @@ def main():
 
     IS_CUSTOM_VOTE = len(sys.argv) == 3
     TARGET = sys.argv[1]
-    KEY = TARGET.split('/',)[3]
-    DATA_PAGE = f"https://www.menti.com/core/vote-keys/{KEY}/series"
-    SUPPORTED_TYPE = ['choices', 'ranking', 'wordcloud', 'open', 'scales', 'qfa', 'prioritisation', 'rating', 'slide']
+
     HEADERS = {
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36"
     }
+
+    if TARGET.isnumeric():
+        getKey = requests.get(f"https://www.menti.com/core/vote-ids/{TARGET}/series", headers=HEADERS)
+        if getKey.status_code == 200:
+            dataReturn = getKey.json()
+            KEY = dataReturn['vote_key']
+    else:
+        KEY = TARGET.split('/',)[3]
+        
+    DATA_PAGE = f"https://www.menti.com/core/vote-keys/{KEY}/series"
+    SUPPORTED_TYPE = ['choices', 'ranking', 'wordcloud', 'open', 'scales', 'qfa', 'prioritisation', 'rating', 'slide']
+   
 
     CUSTOM= ""
     if IS_CUSTOM_VOTE:

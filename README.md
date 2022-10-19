@@ -27,8 +27,13 @@ pip install jemawa
 after that you can run `jemawa` command
 
 ```
-jemawa <mentimeter vote page link>
+jemawa <mentimeter vote page link> <optional command>
 ```
+
+Optional Command list:
+`ls` to list all the question alongside with ID
+`slide_id` to direct vote to the slide
+
 # Vote Type Support 
 ## Ranking Support
 
@@ -100,6 +105,10 @@ so this is how program work.
 ## What is jemawa ?
 
 indonesian word for 'arrogant'
+
+## Development
+
+to run the development, use the `python dev.py ..`
 
 ## Contributors
 

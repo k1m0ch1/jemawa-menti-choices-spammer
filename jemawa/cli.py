@@ -16,11 +16,15 @@ def main():
     print("---------------------------------------------")
 
     if len(sys.argv) < 2:
-        print(f"\n( `ε´ ) you need to provide the menti page, ex: https://www.menti.com/uyupv3tww7")
+        print(f"\n( `ε´ ) you need to provide the menti page, ex: https://www.menti.com/uyupv3tww7 or type `help` to get the instruction")
         sys.exit(1)
 
     IS_CUSTOM_VOTE = len(sys.argv) == 3
     TARGET = sys.argv[1]
+
+    if TARGET == "help":
+        help()
+        return
 
     HEADERS = {
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -55,7 +59,7 @@ def main():
     PRESENTER_ID = INIT['pace']['active']
     if IS_CUSTOM_VOTE:
         PRESENTER_ID = CUSTOM
-        if sys.argv[2] == "questions":
+        if sys.argv[2] == "ls":
             for question in INIT['questions']:
                 print(f"[{question['id']}] type: {question['type']} question: {question['question']}")
             sys.exit(1)
@@ -227,3 +231,13 @@ def execute(TARGET, IS_CUSTOM_VOTE, QUESTIONS, CUSTOM, choice, PRESENTER_QUESTIO
         
         bar.next()
     bar.finish()
+
+def help():
+    print("Jemawa is the tools to spam the mentimeter page")
+    print("\n you can run by running the command `jemawa <menti page/code> <optional command>`")
+    print("for example `jemawa 12345611` to get the current active page and vote the page")
+    print("\nAvailable Command:")
+    print("- <menti page/code>    : you can use active page like https://www.menti.com/alwqyhbebzzr or 12345611")
+    print("\n- <optinal command>    : is always after the menti page/code, with available command `ls` and `question ID`")
+    print("                       : for example running `jemawa 12345611 ls` will reveal existing question")
+    print("                       : and by running `jemawa 12345611 df3rgr7drk1v` will vote the page direct without follow the active page")

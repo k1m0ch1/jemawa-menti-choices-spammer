@@ -3,7 +3,7 @@ name: Build & Upload Python package to pypi
 on:
   push:
     tags: 
-      - v**
+      - *
 
 jobs:
   pypi-publish:

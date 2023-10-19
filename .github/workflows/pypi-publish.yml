@@ -1,9 +1,6 @@
 name: Build & Upload Python package to pypi
 
-on:
-  push:
-    tags: 
-      - '*'
+on: [workflow_dispatch]
 
 jobs:
   pypi-publish:

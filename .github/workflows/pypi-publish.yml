@@ -2,7 +2,10 @@ name: Build & Upload Python package to pypi
 
 on:
   push:
-    tags: v*
+    branches:
+      - main
+    tags: 
+      - v*
 
 jobs:
   pypi-publish:

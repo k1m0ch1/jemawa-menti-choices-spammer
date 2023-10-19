@@ -65,6 +65,8 @@ def main():
             sys.exit(1)
 
     PRESENTER_QUESTION = INIT['questions'][0] # default
+    if not PRESENTER_ID:
+        PRESENTER_ID = PRESENTER_QUESTION['id']
     for question in INIT['questions']:
         if PRESENTER_ID == question['id']:
             if question['type'] not in SUPPORTED_TYPE:

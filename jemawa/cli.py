@@ -42,7 +42,6 @@ def main():
     DATA_PAGE = f"https://www.menti.com/core/vote-keys/{KEY}/series"
     SUPPORTED_TYPE = ['choices', 'ranking', 'wordcloud', 'open', 'scales', 'qfa', 'prioritisation', 'rating', 'slide']
    
-
     CUSTOM= ""
     if IS_CUSTOM_VOTE:
         CUSTOM = sys.argv[2]
@@ -56,12 +55,19 @@ def main():
         sys.exit(1)
 
     INIT = firstPage.json()
+
+    print(f"\n=== {INIT['name']} available at https://menti.com/{INIT['id']} ===\n")
+
     PRESENTER_ID = INIT['pace']['active']
     if IS_CUSTOM_VOTE:
         PRESENTER_ID = CUSTOM
+        if PRESENTER_ID.isdigit():
+            PRESENTER_ID = INIT['questions'][int(PRESENTER_ID)-1]['id']
         if sys.argv[2] == "ls":
-            for question in INIT['questions']:
-                print(f"[{question['id']}] type: {question['type']} question: {question['question']}")
+            print("= List of accessible page =")
+            for i, question in enumerate(INIT['questions']):
+                print(f"{i+1}. [{question['id']}] type: {question['type']}, question: \"{question['question']}\"")
+            print("to pick on of the page you can run `jemawa <menti page> <number>")
             sys.exit(1)
 
     PRESENTER_QUESTION = INIT['questions'][0] # default

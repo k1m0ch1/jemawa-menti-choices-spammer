@@ -4,14 +4,16 @@
 | || || _| | |\/| | / _ \  \ \/\/ /  / _ \
  \__/ |___||_|  |_|/_/ \_\  \_/\_/  /_/ \_\
 
-Mentimeter Multiple Choice Spammer
+Mentimeter Manipulator
 ```
 
-I know this is stupid but its fun, my company using this to vote "something" for a fun event, so I think it will be fun to makes a good laugh for a day in front everyone.
+I know this is stupid but its fun, my company using this to vote "something" for a fun event, so I think it will be fun to makes a good laugh for a day in front everyone, so thats it, I create this tools only for fun.
 
-and yeah
+This tools is created experimented for the mentimeter platform.
 
 > DISCLAIMER or USE AT YOUR OWN RISK, These tools should be considered for educational and research purposes only, this tools is made not to violate the law or abuse the system. Any action you take by using this tools is strictly at your own risk. The creator is not responsible for any action
+
+TL;DR version :
 
 Click the video to see how it work.
 
@@ -19,7 +21,8 @@ Click the video to see how it work.
 
 ## How to use ?
 
-we publish on pypi, you could run jemawa by install with this command 
+we publish on pypi, you could run jemawa by install with this command
+
 ```
 pip install jemawa
 ```
@@ -27,64 +30,46 @@ pip install jemawa
 after that you can run `jemawa` command
 
 ```
-jemawa <mentimeter vote page link> <optional command>
+jemawa <mentimeter vote page link or menti code> <optional command>
+```
+
+example
+
+```
+jemawa https://www.menti.com/alg3v6yduhsr
+```
+
+or
+
+```
+jemawa 26876868
 ```
 
 Optional Command list:
 `ls` to list all the question alongside with ID
 `slide_id` to direct vote to the slide
 
-# Vote Type Support 
-## Ranking Support
-
-Now you can vote on ranking type
-
-![](img/ranking-poc.png)
-
-## Wordcloud and Open Support
-
-now you can add wordcloud with spam vote, and also with open text
-
-![](img/open-poc.png)
-
-![](img/wordcloud-poc.png)
-
-## Scales support
-
-now you can spam the scales vote
-
-![](img/scales-poc.png)
-
-## QFA question vote
-
-now you can spam one of the question so it will have a bigger upvote
-
-![](img/qfa-poc.png)
-
-## QFA question vote
-
-now you can spam one of the question so it will have a bigger upvote
-
-![](img/point-poc.png)
-
-## 2x2 grid vote
-
-Now you can spam 2x2 grid vote
-
-![](img/2x2-grid-poc.png)
+Currently Slide Type we can spam is:
+1. Multiple Choice
+2. Ranking Type <FIXING>
+3. Wordcloud <FIXING>
+4. Open Ended
+5. Scales 
+6. Q&A
+7. 2x2 grid vote
 
 ## Custom page vote
 
 Now you can vote on any page not by only presented page, to do this you can run this
 
 ```
-python3 dor.py <link> questions
+jemawa <link> questions
 ```
 
 to list the questions, after that get the question ID and run this
 
 ```
-python3 dor.py <link> <questionID>
+jemawa <link> <questionID>
 ```
 
 so it will continue like normal
